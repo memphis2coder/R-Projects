@@ -1,0 +1,36 @@
+.ListGroup-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkBox {
+    border: 2px solid black;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.checkBox:hover {
+    background: green;
+    border: 2px solid black;
+}
+
+.checkBox-checked {
+    background: green;
+    border: 2px solid black;
+}
+
+.trash {
+    font-weight: bold;
+}
+
+.trash:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.trash-checked {
+    color: red;
+}
