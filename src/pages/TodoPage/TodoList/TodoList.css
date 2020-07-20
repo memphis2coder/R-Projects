@@ -21,15 +21,15 @@
     border: 2px solid black;
 }
 
-.trash {
-    font-weight: bold;
+.deleteBtn {
+    background: none;
 }
 
-.trash:hover {
-    color: red;
-    cursor: pointer;
+.deleteBtn:hover {
+    color: white;
+    background-color: red;
 }
 
-.trash-checked {
-    color: red;
+.done {
+    text-decoration: line-through;
 }

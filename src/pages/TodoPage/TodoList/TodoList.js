@@ -16,13 +16,14 @@ export default function TodoList() {
 
     const submitHandler = useCallback((event) => { // form submit function
         event.preventDefault(); // prevent page refresh on form submit
+        if (!newTodo.trim()) return; // prevents user spam of empty input
         setTodos([ // changing the todo list with setTodos
-            ...todos, // return the todo list, react does not support .push
             { 
-                id: todos.length + 1,
+                id: todos.length ? todos[0].id + 1 : 1, // give a unique id 
                 content: newTodo, // the newTodo value
                 done: false,
-            }
+            },
+            ...todos, // return the todo list, react does not support .push
         ]);
         setNewTodo(''); // empty input field after submit
     }, [newTodo, todos]); // if newTodo or todos every change we need the latest value
@@ -30,6 +31,21 @@ export default function TodoList() {
     useEffect(() => { // this function will only run when its dependence change
         console.log('todos', todos) // display todos array when updated
     }, [todos]); // I want to know when the todos array changes
+
+    
+    const onCheckChange = useCallback((todo, index) => (event) => { // closure
+        const newTodos = [...todos]; // copy todo list to newTodos
+        newTodos.splice(index, 1, { // remove todo item and replace with itself
+            ...todo, // return a copy of the todo array
+            done: !todo.done // inverse of done
+        });
+        setTodos(newTodos); // return the new todos array
+    }, [todos]); // only change if the todos array changes
+
+    const removeTodo = useCallback((todo) => (event) => { // closure
+        console.log('removeTodo', todo.content);
+        setTodos(todos.filter(otherTodo => otherTodo !== todo)); // remove the one todo we are removing
+    }, [todos]); // only change if the todos changes
 
 
     return (
@@ -51,17 +67,25 @@ export default function TodoList() {
             {/* Todo Display Table */}
             <div className="TodoDisplay mt-5">
                 <ListGroup>
-                    {todos.map((todo) => ( /* use map to show each todo item */
+                    {todos.map((todo, index) => ( /* use map to show each todo item */
                         <ListGroup.Item key={todo.id}> {/* each todo needs a unique key */}
                             <div className="ListGroup-inner">
-                                    <input 
+                                    <input
+                                        checked={todo.done} /* todo property done */
                                         type="checkbox" 
                                         className="checkBox"
+                                        onChange={onCheckChange(todo, index)}
                                     /> {/* checkbox to show completed */}
-                                <span className="text">
+                                <span className={todo.done ? 'done' : ''}>
                                     {todo.content} {/* show the new todo */}
                                 </span>
-                                <span className="trash">X</span>
+                                <span>
+                                    <button
+                                        onClick={removeTodo(todo)} 
+                                        className="deleteBtn">
+                                            X
+                                    </button>
+                                </span>
                             </div>
                         </ListGroup.Item>
                     ))}
