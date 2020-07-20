@@ -1,6 +1,8 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import { Form } from 'react-bootstrap';
 import {ListGroup} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 
 import './TodoList.css';
 
@@ -28,11 +30,6 @@ export default function TodoList() {
         setNewTodo(''); // empty input field after submit
     }, [newTodo, todos]); // if newTodo or todos every change we need the latest value
 
-    useEffect(() => { // this function will only run when its dependence change
-        console.log('todos', todos) // display todos array when updated
-    }, [todos]); // I want to know when the todos array changes
-
-    
     const onCheckChange = useCallback((todo, index) => (event) => { // closure
         const newTodos = [...todos]; // copy todo list to newTodos
         newTodos.splice(index, 1, { // remove todo item and replace with itself
@@ -44,9 +41,42 @@ export default function TodoList() {
 
     const removeTodo = useCallback((todo) => (event) => { // closure
         console.log('removeTodo', todo.content);
-        setTodos(todos.filter(otherTodo => otherTodo !== todo)); // remove the one todo we are removing
+        setTodos(todos.filter(otherTodo => otherTodo !== todo)); // remove the one todo 
     }, [todos]); // only change if the todos changes
 
+    const markAllDone = useCallback(() => {
+        const updateTodos = todos.map(todo => { // copy the array
+            return { // return each of the items
+                ...todo, 
+                done: true, // update done property to true
+            };
+        });
+        setTodos(updateTodos) // update the todo list
+    }, [todos]); // run on change of todos.
+
+    const unMarkAll = () =>  {
+        const newTodos = todos.map(todo => { // get a copy of the todos array
+            return { // return each todo item
+                ...todo,
+                done: false, // set done to false
+            };
+        });
+        setTodos(newTodos); // update todo list
+    };
+
+    const deleteAll = () => { // remove all todo list
+        const removeAll = todos.map(todo => {
+            return {
+                ...todo,
+                content: ""
+            }
+        })
+        setTodos([]);
+    };
+
+    useEffect(() => { // this function will only run when its dependence change
+        console.log('todos', todos) // display todos array when updated
+    }, [todos]); // I want to know when the todos array changes
 
     return (
         <div className="container">
@@ -62,11 +92,28 @@ export default function TodoList() {
                         />
                         <Form.Text className="text-muted">enter a new todo</Form.Text>
                 </Form.Group>
+                    <Row>
+                        <Col>
+                            <Button className="btn-success" onClick={markAllDone}>
+                                check all
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button onClick={unMarkAll}>
+                                uncheck all
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button className="btn-danger" onClick={deleteAll}>
+                                delete all
+                            </Button>
+                        </Col>
+                    </Row>
             </Form>
 
             {/* Todo Display Table */}
             <div className="TodoDisplay mt-5">
-                <ListGroup>
+                <ListGroup id="list">
                     {todos.map((todo, index) => ( /* use map to show each todo item */
                         <ListGroup.Item key={todo.id}> {/* each todo needs a unique key */}
                             <div className="ListGroup-inner">
