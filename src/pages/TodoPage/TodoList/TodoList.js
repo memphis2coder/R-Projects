@@ -44,6 +44,17 @@ export default function TodoList() {
         setTodos(todos.filter(otherTodo => otherTodo !== todo)); // remove the one todo 
     }, [todos]); // only change if the todos changes
 
+    const editTodo = useCallback((todo) => (event) => { // closure
+        const editTodo = todos.map(todo => {
+            return {
+                ...todo,
+                
+            }
+        })
+        setTodos(editTodo)
+        console.log(todo);
+    }, [todos]);
+
     const markAllDone = useCallback(() => {
         const updateTodos = todos.map(todo => { // copy the array
             return { // return each of the items
@@ -65,12 +76,6 @@ export default function TodoList() {
     };
 
     const deleteAll = () => { // remove all todo list
-        const removeAll = todos.map(todo => {
-            return {
-                ...todo,
-                content: ""
-            }
-        })
         setTodos([]);
     };
 
@@ -126,13 +131,23 @@ export default function TodoList() {
                                 <span className={todo.done ? 'done' : ''}>
                                     {todo.content} {/* show the new todo */}
                                 </span>
-                                <span>
-                                    <button
-                                        onClick={removeTodo(todo)} 
-                                        className="deleteBtn">
-                                            X
-                                    </button>
-                                </span>
+                                {/* spacing for edit and delete buttons */}
+                                    <div className="right-buttons">
+                                        <span>
+                                            <button
+                                                onClick={editTodo(todo)} 
+                                                className="editBtn btn-info">
+                                                    edit
+                                            </button>
+                                        </span>
+                                        <span>
+                                            <button
+                                                onClick={removeTodo(todo)} 
+                                                className="deleteBtn">
+                                                    X
+                                            </button>
+                                        </span>
+                                    </div>
                             </div>
                         </ListGroup.Item>
                     ))}

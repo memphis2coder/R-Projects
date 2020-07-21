@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+.right-buttons > span {
+    margin-left: 1rem;
+}
+
 .checkBox {
     border: 2px solid black;
     width: 20px;
@@ -28,6 +32,12 @@
 .deleteBtn:hover {
     color: white;
     background-color: red;
+}
+
+#newTodo {
+    text-align: center;
+    background: transparent;
+    border: none;
 }
 
 .done {
